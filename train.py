@@ -53,7 +53,7 @@ def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_crit
         
         # Training batches until covering all samples| Where model is updated ("learning")
         model.train()
-        train_loss = 0
+        training_loss = 0
         for batch, (images, labels,_) in enumerate(progress_bar(train_dataloader, parent=mb)): # TODO: make this loop a separate function
             # Move X, Y to device
             images = images.to(device)
@@ -79,9 +79,7 @@ def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_crit
 
         del images, labels, loss
 
-        train_loss = training_loss/len(train_dataloader)
-
-        training_losses.append(train_loss)
+        training_losses.append(training_loss/len(train_dataloader))
 
         mb.write('-Finis epoch {} | train loss: {:4.f}'.format(epoch, train_loss))
 
@@ -117,7 +115,7 @@ if __name__ == '__main__':
     ### Load model configuration ###
     print('----- Loading model configuration ... -----')
     # Load model
-    NUM_CLASSES = labels.shape[1]
+    NUM_CLASSES = labels.shape[1] - 1 # minus first column
     model = RetinaModel(NUM_CLASSES)
 
     # Loss function
