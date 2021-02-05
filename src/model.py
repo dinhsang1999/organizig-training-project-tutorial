@@ -10,7 +10,7 @@ class Backbone(nn.Module):
     def __init__(self, num_classes, is_trained=True):
         super().__init__()
         # Load Resnet50 with pretrained ImageNet weights
-        self.net = torchvision.models.resnet.resnet50(pretrained=is_trained)
+        self.net = torchvision.models.resnet.resnet18(pretrained=is_trained)
 
         # replace the last layer with a new layer that have `num_classes` nodes, followed by Sigmoid function
         classifier_input_size = self.net.fc.in_features
