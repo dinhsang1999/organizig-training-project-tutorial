@@ -14,6 +14,22 @@ Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/util
 
 Add `requirements.txt` for better installation.
 
+### Usage
+Run 
+```bash
+python train.py
+```
+
+Expected output:
+```
+----- Loading data ... -----
+Done
+----- Loading model configuration ... -----
+Done
+----- Training model ... -----
+Epoch 1/100 : |██----------| 23.26% [20/86 02:01<06:42 Training loss: 0.55536]
+```
+
 ### Test `model.py`
 ```python
 from src.model import RetinaModel

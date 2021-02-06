@@ -34,7 +34,34 @@ NUM_WORKERS = 0
                     
 
 def epoch_training(epoch, model, train_dataloader, device, loss_criteria, optimizer, mb):
-    pass
+    model.train()
+    training_loss = 0
+    for batch, (images, labels,_) in enumerate(progress_bar(train_dataloader, parent=mb)): # TODO: make this loop a separate function
+        # Move X, Y to device
+        images = images.to(device)
+        labels = labels.to(device)
+
+        # Clear previous gradient
+        optimizer.zero_grad()
+
+        # Feed forward tge nidek
+        pred = model(images)
+        loss = loss_criteria(pred, labels)
+
+        # Back probagation
+        loss.backward()
+
+        # Update parameters()
+        optimizer.step()
+
+        # Update training loss after each batch
+        training_loss += loss.item()
+
+        mb.child.comment = f'Training loss: {round(training_loss/(batch + 1), 5)}'
+
+    del images, labels, loss
+
+    return training_loss/len(train_dataloader)
 
 def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_criteria, optimizer, lr_scheduler):
     # initialisation
@@ -52,34 +79,9 @@ def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_crit
         mb.main_bar.comment = f'Best F1 score: {best_score}'
         
         # Training batches until covering all samples| Where model is updated ("learning")
-        model.train()
-        training_loss = 0
-        for batch, (images, labels,_) in enumerate(progress_bar(train_dataloader, parent=mb)): # TODO: make this loop a separate function
-            # Move X, Y to device
-            images = images.to(device)
-            labels = labels.to(device)
+        training_loss_epoch = epoch_training(epoch, model, train_dataloader, device, loss_criteria, optimizer, mb)
 
-            # Clear previous gradient
-            optimizer.zero_grad()
-
-            # Feed forward tge nidek
-            pred = model(images)
-            loss = loss_criteria(pred, labels)
-
-            # Back probagation
-            loss.backward()
-
-            # Update parameters()
-            optimizer.step()
-
-            # Update training loss after each batch
-            training_loss += loss.item()
-
-            mb.child.comment = f'Training loss {training_loss/(batch + 1)}'
-
-        del images, labels, loss
-
-        training_losses.append(training_loss/len(train_dataloader))
+        training_losses.append(training_loss_epoch)
 
         mb.write('-Finis epoch {} | train loss: {:4.f}'.format(epoch, train_loss))
 
@@ -134,7 +136,7 @@ if __name__ == '__main__':
     print('Done')
     
     ### Train ###
-    print('----- Training data ... -----')
+    print('----- Training model ... -----')
     device = "cuda" if torch.cuda.is_available() else "cpu"
     train(device, model, train_dataloader, val_dataloader, MAX_EPOCHS,
             loss_criteria, optimizer, lr_scheduler)
