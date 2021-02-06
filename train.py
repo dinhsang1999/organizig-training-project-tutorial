@@ -6,6 +6,7 @@ Defines:
     epoch loop
 """
 import os
+import time
 import pandas as pd
 import numpy as np
 import torch
@@ -23,16 +24,16 @@ from src.utils import f1_score
 ##### CONSTANTS #####
 IMAGE_SIZE = 224                              # Image size (224x224)
 DATA_DIR = '/Users/oddphoton/Projects/vietai/vietai_advance_w1b_retinal_disease_classificaton'
-DATA_DIR_TRAIN_IMAGES = os.path.join(DATA_DIR, 'train')
-DATA_DIR_LABEL = os.path.join(DATA_DIR, 'train.csv')
+DATA_DIR_TRAIN_IMAGES = os.path.join(DATA_DIR, 'train_sample')
+DATA_DIR_LABEL = os.path.join(DATA_DIR, 'train_sample.csv')
 
 #### HYPER PARAMETERS #####
 BATCH_SIZE = 2                             
 LEARNING_RATE = 0.0001
 LEARNING_RATE_SCHEDULE_FACTOR = 0.1           # Parameter used for reducing learning rate
 LEARNING_RATE_SCHEDULE_PATIENCE = 5           # Parameter used for reducing learning rate
-MAX_EPOCHS = 3                              # Maximum number of training epochs
-TRAINING_TIME_OUT=3600*10
+MAX_EPOCHS = 3                                # Maximum number of training epochs
+TRAINING_TIME_OUT=3600*10                     # Maximum number of training time
 NUM_WORKERS = 0
                     
 
@@ -126,7 +127,8 @@ def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_crit
     mb = master_bar(range(MAX_EPOCHS))
     mb.names = ['Training loss', 'Validation loss', 'Validation F1-score']
 
-    # TODO: add time measurement
+    # Start measuring training time
+    start_time = time.time()
 
     # Training each epoch 
     for epoch in mb:
@@ -144,20 +146,30 @@ def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_crit
         mb.write('- Finished epoch {} | train loss: {:.4f} | val loss: {:.4f} | val f1 score: {:.4f}\
                     '.format(epoch, training_loss_epoch, val_loss_epoch, new_score))
 
+        # Update learning rate (according to validation f1 score)
+        lr_scheduler.step(new_score)
+
         # Save model
         if best_score < new_score:
-            mb.write(f"Impove F1-score from {round(best_score, 4)} to {round(new_score, 4}")
+            mb.write('Improve F1-score from {:.4f} to {:.4f}'.format(best_score, new_score))
             best_score = new_score
+            nonimproved_epoch = 0
             torch.save({"model": model.state_dict(),
                         "optimizer": optimizer.state_dict(),
                         "best_score": best_score,
                         "epoch": epoch,
-                        "lr_scheduler": lr_scheduler.state_dict()}, 'retina_epoch{}_score{:.4f}.pth'.format(epoch, new_score))
+                        "lr_scheduler": lr_scheduler.state_dict()}, 'models/retina_epoch{}_score{:.4f}.pth'.format(epoch, new_score))
+        else:
+            nonimproved_epoch += 1
+        
+        if nonimproved_epoch > 10:
+            print('Early stopping. Model not improving.')
+            break
+        if time.time() - start_time > TRAINING_TIME_OUT:
+            print('Early stopping. Out of time.')
 
-        # TODO: Add update learning rate (according to validation f1 score), early stopping
         # TODO: Add training chart
-        # TODO: Add saving model
-
+        
 
 if __name__ == '__main__':
     ### Load data ###

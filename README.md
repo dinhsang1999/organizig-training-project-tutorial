@@ -14,6 +14,8 @@ Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/util
 
 Add `requirements.txt` for better installation.
 
+`Note`: check commits in the branch to see the code progression through time.
+
 ### Usage
 Run 
 ```bash
