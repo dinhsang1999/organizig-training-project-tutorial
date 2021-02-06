@@ -46,6 +46,6 @@ def f1_score(y_true, y_pred):
     """ 
     true_np = y_true.to("cpu").numpy()
     pred_np = y_pred.to("cpu").numpy()
-    precision = precision(true_np, pred_np)
-    recall = recall(true_np, pred_np)
-    return 2*((precision*recall)/(precision+recall+np.finfo(float).eps))
+    precision_score = precision(true_np, pred_np)
+    recall_score = recall(true_np, pred_np)
+    return 2*((precision_score * recall_score) / (precision_score + recall_score + np.finfo(float).eps))

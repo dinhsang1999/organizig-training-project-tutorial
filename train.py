@@ -27,11 +27,11 @@ DATA_DIR_TRAIN_IMAGES = os.path.join(DATA_DIR, 'train')
 DATA_DIR_LABEL = os.path.join(DATA_DIR, 'train.csv')
 
 #### HYPER PARAMETERS #####
-BATCH_SIZE = 32                             
+BATCH_SIZE = 2                             
 LEARNING_RATE = 0.0001
 LEARNING_RATE_SCHEDULE_FACTOR = 0.1           # Parameter used for reducing learning rate
 LEARNING_RATE_SCHEDULE_PATIENCE = 5           # Parameter used for reducing learning rate
-MAX_EPOCHS = 100                              # Maximum number of training epochs
+MAX_EPOCHS = 3                              # Maximum number of training epochs
 TRAINING_TIME_OUT=3600*10
 NUM_WORKERS = 0
                     
@@ -143,6 +143,16 @@ def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_crit
 
         mb.write('- Finished epoch {} | train loss: {:.4f} | val loss: {:.4f} | val f1 score: {:.4f}\
                     '.format(epoch, training_loss_epoch, val_loss_epoch, new_score))
+
+        # Save model
+        if best_score < new_score:
+            mb.write(f"Impove F1-score from {round(best_score, 4)} to {round(new_score, 4}")
+            best_score = new_score
+            torch.save({"model": model.state_dict(),
+                        "optimizer": optimizer.state_dict(),
+                        "best_score": best_score,
+                        "epoch": epoch,
+                        "lr_scheduler": lr_scheduler.state_dict()}, 'retina_epoch{}_score{:.4f}.pth'.format(epoch, new_score))
 
         # TODO: Add update learning rate (according to validation f1 score), early stopping
         # TODO: Add training chart
