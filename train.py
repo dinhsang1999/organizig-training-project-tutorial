@@ -25,7 +25,7 @@ from src.utils import f1_score
 IMAGE_SIZE = 224                              # Image size (224x224)
 DATA_DIR = '/Users/oddphoton/Projects/vietai/vietai_advance_w1b_retinal_disease_classificaton'
 DATA_DIR_TRAIN_IMAGES = os.path.join(DATA_DIR, 'train_sample')
-DATA_DIR_LABEL = os.path.join(DATA_DIR, 'train_sample.csv')
+DATA_DIR_TRAIN_LABEL = os.path.join(DATA_DIR, 'train_sample.csv')
 
 #### HYPER PARAMETERS #####
 BATCH_SIZE = 2                             
@@ -175,7 +175,7 @@ if __name__ == '__main__':
     ### Load data ###
     print('----- Loading data ... -----')
     # Load label information from CSV train file  TODO: reconsider change `data` to `label`
-    labels = pd.read_csv(DATA_DIR_LABEL)
+    labels = pd.read_csv(DATA_DIR_TRAIN_LABEL)
     train_data, val_data = train_test_split(labels, test_size=0.2, random_state=2020)
 
     # Create dataset and dataset dataloader
