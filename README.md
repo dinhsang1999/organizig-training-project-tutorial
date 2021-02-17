@@ -1,14 +1,15 @@
 # How to organize a model training repository - a tutorial
 
 Stage 1: 
-* Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/utils.py` and `train.py` in the following basic structure.
+* Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/utils.py`, `train.py`, and `test.py` in the following basic structure.
 
 ```
 ├── src
 │   ├── dataset.py
 │   ├── model.py
 │   └── utils.py
-└── train.py
+├── train.py
+└── test.py
 ```
 
 * Add `requirements.txt` for better installation.
@@ -30,6 +31,16 @@ Done
 ----- Training model ... -----
 Epoch 1/100 : |██----------| 23.26% [20/86 02:01<06:42 Training loss: 0.55536]
 ```
+
+Make sure:
+* the dataset follow the structure described below
+* folders `models` (for training) and `results` (testing) exists
+
+After the models are trained, run:
+```bash
+python test.py
+```
+for inference
 
 ### Test `model.py`
 ```python
