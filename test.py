@@ -95,6 +95,6 @@ if __name__ == '__main__':
     submission_metadata['predicted']=predicted
 
     submission_df = pd.DataFrame(submission_metadata)
-    submission_df.to_csv("results/submission.csv", index=False)
+    submission_df.to_csv("results/submission.csv", index=False) # make sure the folder `results/` exists
     print(submission_df[1:5])
     print('Done')

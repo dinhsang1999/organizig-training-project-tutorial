@@ -158,7 +158,7 @@ def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_crit
                         "optimizer": optimizer.state_dict(),
                         "best_score": best_score,
                         "epoch": epoch,
-                        "lr_scheduler": lr_scheduler.state_dict()}, 'models/retina_epoch{}_score{:.4f}.pth'.format(epoch, new_score))
+                        "lr_scheduler": lr_scheduler.state_dict()}, 'models/retina_epoch{}_score{:.4f}.pth'.format(epoch, new_score)) # Make sure the folder `models/` exists
         else:
             nonimproved_epoch += 1
         
