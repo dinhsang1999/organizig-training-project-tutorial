@@ -1,5 +1,6 @@
 # How to organize a model training repository - a tutorial
 
+Stage 0: initial notebooks
 Stage 1: 
 * Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/utils.py`, `train.py`, and `test.py` in the following basic structure.
 
@@ -14,7 +15,26 @@ Stage 1:
 
 * Add `requirements.txt` for better installation.
 
+**Stage 2: split part of `train.py` to `/src/trainer.py`**
+
 `Note`: check commits in the branch to see the code progression through time.
+
+### Installation
+Create virtual environment
+```bash
+conda create -n myenv python=3.7
+conda activate myenv
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+Download and set up data by running 
+```bash
+bash setup_data.sh
+```
 
 ### Usage
 Run 
