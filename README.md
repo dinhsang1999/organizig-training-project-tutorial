@@ -1,7 +1,7 @@
 # How to organize a model training repository - a tutorial
 
 Stage 0: initial notebooks
-Stage 1: 
+**Stage 1:** 
 * Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/utils.py`, `train.py`, and `test.py` in the following basic structure.
 
 ```
@@ -14,8 +14,6 @@ Stage 1:
 ```
 
 * Add `requirements.txt` for better installation.
-
-**Stage 2: split part of `train.py` to `/src/trainer.py`**
 
 `Note`: check commits in the branch to see the code progression through time.
 
@@ -137,7 +135,7 @@ Structure of the label file
 import pandas as pd
 import os
 from src.dataset import RetinaDataset
-DATA_DIR = '/Users/oddphoton/Projects/vietai/vietai_advance_w1b_retinal_disease_classificaton'
+DATA_DIR = './data'
 IMAGE_SIZE = 224
 labels = pd.read_csv(os.path.join(DATA_DIR, 'train.csv'))
 dataset = RetinaDataset(os.path.join(DATA_DIR, 'train'), labels, (IMAGE_SIZE, IMAGE_SIZE), True)

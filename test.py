@@ -8,7 +8,7 @@ from src.model import RetinaModel
 from fastprogress import progress_bar
 
 IMAGE_SIZE = 224
-DATA_DIR = '/Users/oddphoton/Projects/vietai/vietai_advance_w1b_retinal_disease_classificaton'
+DATA_DIR = './data'
 DATA_DIR_TEST_IMAGES = os.path.join(DATA_DIR, 'test')
 DATA_DIR_TEST_RESULTS = os.path.join(DATA_DIR, 'sample_submission.csv')
 DATA_DIR_TRAIN_LABEL = os.path.join(DATA_DIR, 'train_sample.csv')
