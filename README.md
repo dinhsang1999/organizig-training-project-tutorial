@@ -1,20 +1,38 @@
 # How to organize a model training repository - a tutorial
 
-Stage 1: 
-
-Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/utils.py` and `train.py` in the following basic structure.
+Stage 0: initial notebooks
+**Stage 1:** 
+* Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/utils.py`, `train.py`, and `test.py` in the following basic structure.
 
 ```
 ├── src
 │   ├── dataset.py
 │   ├── model.py
 │   └── utils.py
-└── train.py
+├── train.py
+└── test.py
 ```
 
-Add `requirements.txt` for better installation.
+* Add `requirements.txt` for better installation.
 
 `Note`: check commits in the branch to see the code progression through time.
+
+### Installation
+Create virtual environment
+```bash
+conda create -n myenv python=3.7
+conda activate myenv
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+Download and set up data by running 
+```bash
+bash setup_data.sh
+```
 
 ### Usage
 Run 
@@ -31,6 +49,16 @@ Done
 ----- Training model ... -----
 Epoch 1/100 : |██----------| 23.26% [20/86 02:01<06:42 Training loss: 0.55536]
 ```
+
+Make sure:
+* the dataset follow the structure described below
+* folders `models` (for training) and `results` (testing) exists
+
+After the models are trained, run:
+```bash
+python test.py
+```
+for inference
 
 ### Test `model.py`
 ```python
@@ -107,7 +135,7 @@ Structure of the label file
 import pandas as pd
 import os
 from src.dataset import RetinaDataset
-DATA_DIR = '/Users/oddphoton/Projects/vietai/vietai_advance_w1b_retinal_disease_classificaton'
+DATA_DIR = './data'
 IMAGE_SIZE = 224
 labels = pd.read_csv(os.path.join(DATA_DIR, 'train.csv'))
 dataset = RetinaDataset(os.path.join(DATA_DIR, 'train'), labels, (IMAGE_SIZE, IMAGE_SIZE), True)

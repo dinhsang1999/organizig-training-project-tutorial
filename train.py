@@ -23,9 +23,9 @@ from src.utils import f1_score
 
 ##### CONSTANTS #####
 IMAGE_SIZE = 224                              # Image size (224x224)
-DATA_DIR = '/Users/oddphoton/Projects/vietai/vietai_advance_w1b_retinal_disease_classificaton'
-DATA_DIR_TRAIN_IMAGES = os.path.join(DATA_DIR, 'train_sample')
-DATA_DIR_TRAIN_LABEL = os.path.join(DATA_DIR, 'train_sample.csv')
+DATA_DIR = './data'
+DATA_DIR_TRAIN_IMAGES = os.path.join(DATA_DIR, 'train/train')
+DATA_DIR_TRAIN_LABEL = os.path.join(DATA_DIR, 'train.csv')
 
 #### HYPER PARAMETERS #####
 BATCH_SIZE = 2                             
@@ -158,7 +158,7 @@ def train(device, model, train_dataloader, val_dataloader, max_epochs, loss_crit
                         "optimizer": optimizer.state_dict(),
                         "best_score": best_score,
                         "epoch": epoch,
-                        "lr_scheduler": lr_scheduler.state_dict()}, 'models/retina_epoch{}_score{:.4f}.pth'.format(epoch, new_score))
+                        "lr_scheduler": lr_scheduler.state_dict()}, 'models/retina_epoch{}_score{:.4f}.pth'.format(epoch, new_score)) # Make sure the folder `models/` exists
         else:
             nonimproved_epoch += 1
         
