@@ -1,6 +1,7 @@
 # How to organize a model training repository - a tutorial
 
 Stage 0: initial notebooks
+
 **Stage 1:** 
 * Split the initial notebooks into `/src/model.py`, `/src/dataset.py `, `/src/utils.py`, `train.py`, and `test.py` in the following basic structure.
 
