@@ -1,0 +1,19 @@
+{
+	"images_folder": "./data/val_sep/images",
+	"train_folder" : "./data/val_sep/train",
+	"test_folder" : "./data/val_sep/test",
+	"save_model_path": "./model/best_model.pt",
+	"seed": 1234,
+	"pretrained_size": 224,
+	"pretrain_means": [0.485, 0.456, 0.406],
+	"pretrained_stds": [0.229, 0.224, 0.225],
+	"train_ratio": 0.8,
+	"valid_ratio": 0.9,
+	"batch_size": 64,
+	"start_lr": 1e-7,
+	"end_lr": 10,
+	"num_iter": 1,
+	"found_lr": 1e-3,
+	"epochs": 1,
+	"num_classes": 8
+  }
