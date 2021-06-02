@@ -1,5 +1,3 @@
-import os
-import time
 import pandas as pd
 import numpy as np
 import torch
@@ -7,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
-from fastprogress import master_bar, progress_bar
+from fastprogress import progress_bar
 
 from src.dataset import RetinaDataset
 from src.model import RetinaModel
@@ -23,14 +21,8 @@ class BaselineClassifier(Trainer):
 		super(BaselineClassifier, self).__init__(**args)
 		# Load label information from CSV train file  TODO: reconsider change `data` to `label`
 		self.labels = pd.read_csv(self.DATA_DIR_TRAIN_LABEL)
-	
-	def train(self, mode, iterator, optimizer, criterion, scheduler, device): # Epoch training
-		'''
-		Main training function
-		'''
-		pass
 
-	def epoch_train(self, model, train_iterator, optimizer, loss_criteria, device): # Epoch training
+	def epoch_train(self, model, train_iterator, optimizer, loss_criteria, device, mb): # Epoch training
 		'''
 		Training rountine in each epoch
 		Returns:
@@ -38,7 +30,7 @@ class BaselineClassifier(Trainer):
 		'''
 		model.train()
 		training_loss = 0
-		for batch, (images, labels,_) in enumerate(train_iterator):
+		for batch, (images, labels,_) in enumerate(progress_bar(train_iterator, parent=mb)):
 			# Move X, Y to device
 			images = images.to(device)
 			labels = labels.to(device)
@@ -59,11 +51,13 @@ class BaselineClassifier(Trainer):
 			# Update training loss after each batch
 			training_loss += loss.item()
 
+			mb.child.comment = f'Training loss: {round(training_loss/(batch + 1), 5)}'
+
 		del images, labels, loss
 
 		return training_loss/len(train_iterator)
 
-	def epoch_evaluate(self, model, val_iterator, loss_criteria, device): # Epoch evaluating
+	def epoch_evaluate(self, model, val_iterator, loss_criteria, device, mb): # Epoch evaluating
 		'''
 		Validating model after each epoch
 		Returns:
@@ -79,7 +73,7 @@ class BaselineClassifier(Trainer):
 
 		with torch.no_grad(): # Turn off gradient
 			# For each batch
-			for step, (images, labels,_) in enumerate(val_iterator):
+			for step, (images, labels,_) in enumerate(progress_bar(val_iterator, parent=mb)):
 				# Move images, labels to device (GPU)
 				images = images.to(device)
 				labels = labels.to(device)
@@ -96,6 +90,8 @@ class BaselineClassifier(Trainer):
 
 				# Update validation loss after each batch
 				val_loss += loss
+
+				mb.child.comment = f'Validation loss: {val_loss/(step+1)}'
 
 		# Clear memory
 		del images, labels, loss
@@ -157,25 +153,11 @@ class BaselineClassifier(Trainer):
 		print('Done')
 		return model, optimizer, loss_criteria, lr_scheduler, device
 
-	def train_test_split(self):
+	def convert_time(self, start_time, end_time):
 		'''
-		Return:
-			train_data, val_data
-		'''
-		pass
-
-	def get_train_info(self, train_data):
-		pass
-
-	def get_model(self, **architecture):
-		pass
-
-	def epoch_time(self, start_time, end_time):
-		'''
-		Convert epoch time (ms) to minutes and seconds
+		Convert time (miliseconds) to minutes and seconds
 		'''
 		elapsed_time = end_time - start_time
 		elapsed_mins = int(elapsed_time / 60)
 		elapsed_secs = int(elapsed_time - (elapsed_mins * 60))
 		return elapsed_mins, elapsed_secs
-
