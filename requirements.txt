@@ -5,3 +5,4 @@ numpy==1.18.1
 fastprogress==1.0.0
 Pillow==8.1.0
 scikit_learn==0.24.1
+requests==2.25.1

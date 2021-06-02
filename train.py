@@ -21,8 +21,8 @@ def train():
 	for epoch in range(trainer.epochs):
 		start_time = time.monotonic()
 
-		train_loss, train_acc = trainer.train(model, train_iterator, optimizer, criterion, scheduler, device)
-		valid_loss, valid_acc = trainer.evaluate(model, valid_iterator, criterion device)
+		train_loss, train_acc = trainer.epoch_train(model, train_iterator, optimizer, criterion, scheduler, device)
+		valid_loss, valid_acc = trainer.epoch_evaluate(model, valid_iterator, criterion, device)
 
 		if valid_loss < best_valid_loss:
 			best_valid_loss = valid_loss
