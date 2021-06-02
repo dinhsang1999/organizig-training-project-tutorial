@@ -67,7 +67,30 @@ class BaselineClassifier(Trainer):
 		Return:
 			model, optimizer, criterion, scheduer, device
 		'''
-		pass
+		### Load model configuration ###
+		print('----- Loading model configuration ... -----')
+		# Load model
+		NUM_CLASSES = self.labels.shape[1] - 1 # minus first column
+		model = RetinaModel(NUM_CLASSES)
+
+		# Loss function
+		loss_criteria = nn.BCELoss()
+
+		# Optimizer
+		optimizer = optim.Adam(model.parameters(), lr=self.LEARNING_RATE_START,
+									betas=(0.9, 0.999), eps=1e-8, weight_decay=1e-5)
+
+		# Learning rate reduced gradually during training
+		lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+								optimizer, 
+								factor=self.LEARNING_RATE_SCHEDULE_FACTOR,
+								patience=self.LEARNING_RATE_SCHEDULE_PATIENCE,
+								mode='max', verbose=True)
+		
+		device = "cuda" if torch.cuda.is_available() else "cpu"
+
+		print('Done')
+		return model, optimizer, loss_criteria, lr_scheduler, device
 
 	def train_test_split(self):
 		'''
