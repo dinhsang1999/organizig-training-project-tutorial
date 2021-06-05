@@ -4,6 +4,7 @@ import json
 import time
 import os
 from fastprogress import master_bar
+from pprint import pprint
 
 
 def train():
@@ -13,7 +14,7 @@ def train():
 
 	# Load parameters
 	params = json.load(open('./config/train_config.json', 'r'))
-	print(params)
+	pprint(params)
 
 	# LOAD TRAINER
 	trainer = BaselineClassifier(**params)
